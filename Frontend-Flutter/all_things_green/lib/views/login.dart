@@ -11,58 +11,102 @@ class LoginPage extends GetView<LoginController> {
   Widget build(BuildContext context) {
     final userType = Get.arguments.toString();
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Login $userType'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextField(
-                keyboardType: TextInputType.phone,
+      appBar: AppBar(
+        title: Text('Login $userType'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Enter phone number',
-                  border: OutlineInputBorder(),
-                ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                    filled: true,
+                    labelText: 'Phone Number',
+                    hintStyle: TextStyle(color: Colors.grey[800]),
+                    fillColor: Colors.white70),
+                keyboardType: TextInputType.phone,
               ),
-              SizedBox(
-                height: 16.0,
-              ),
-              TextField(
+            ),
+            // TextField(
+            //   keyboardType: TextInputType.phone,
+            //   decoration: InputDecoration(
+            //     hintText: 'Enter phone number',
+            //     border: OutlineInputBorder(),
+            //   ),
+            // ),
+            SizedBox(
+              height: .0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  hintText: 'Enter password',
-                  border: OutlineInputBorder(),
-                ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      filled: true,
+                      labelText: 'Password',
+                      hintStyle: TextStyle(color: Colors.grey[800]),
+                      fillColor: Colors.white70),
+                      
               ),
-              SizedBox(
-                height: 16.0,
-              ),
-              SizedBox(
-                width: double.infinity,
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+            Container(
+                width: 150,
+                height: 60,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    // backgroundColor: MaterialStateProperty.all<Color>(
+                    //     Color.fromARGB(255, 93, 63, 211)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                  ),
                   onPressed: () {
-                    // add logic for logging in here
+                    // Get.toNamed(NavigationRoutes.login, arguments: 'Expert');
                   },
-                  child: Text('Login'),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 16.0,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed(NavigationRoutes.signup, arguments: userType);
-                  },
-                  child: Text('Sign Up'),
-                ),
-              ),
-            ],
-          ),
+SizedBox(
+              height: 16.0,
+            ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       Get.toNamed(NavigationRoutes.signup, arguments: userType);
+            //     },
+            //     child: Text('Sign Up'),
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+  onTap: () {
+    Get.toNamed(NavigationRoutes.signup, arguments: userType);
+  },
+  child: Text('Sign Up', style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 34, 0, 255),),), 
+),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }

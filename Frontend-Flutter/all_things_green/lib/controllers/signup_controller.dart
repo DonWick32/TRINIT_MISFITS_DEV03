@@ -8,7 +8,7 @@ class SignupController extends GetxController {
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
   final selectedState = 'Andhra Pradesh'.obs;
-  final selectedLanguage= 'English'.obs;
+  final selectedLanguages = [].obs;
   final List<String> states = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -82,5 +82,12 @@ class SignupController extends GetxController {
     //   isLoading.value = false;
     //   Get.snackbar('Failed To Login', err.toString());
     // });
+  }
+  void updateLanguages(List<dynamic> valueList) {
+    selectedLanguages.clear();
+    for (int i = 0; i < valueList.length; i++) {
+        selectedLanguages.add(languages[valueList[i]]);
+    }
+    print(selectedLanguages);
   }
 }
