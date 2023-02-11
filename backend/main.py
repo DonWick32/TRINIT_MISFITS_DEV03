@@ -14,6 +14,7 @@ from fastapi.responses import Response, JSONResponse
 from fastapi import FastAPI, Header, Depends, HTTPException,Query
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import hashlib
+import difflib
 from sqlalchemy.orm import Session
 from database import (
     Farmer,
@@ -21,27 +22,16 @@ from database import (
     Expert,
     UserIn,
     UserOut,
+    get_db,
     get_users,
     add_user,
     update_user,
     delete_user,
 )
 
-
 app = FastAPI()
 
-
-
-class Item(BaseModel):
-    name: str
-    phone_number: str
-    email_id : str
-    password: str
-    language: str
-    state: str
-
 security = HTTPBasic()
-router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
@@ -68,8 +58,21 @@ def read_users(model_name: str):
 
     return get_users(model)
 
+# Create a new user
+
+def validate_signup_data(name: str, phone_number: str, email: str, password: str, language: str, state: str):
+    if not name or not phone_number or not email or not password or not language or not state:
+        raise HTTPException(status_code=400, detail="All fields are required")
+    if len(password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long")
+
+def hash_password(password: str):
+    return hashlib.sha256(password.encode()).hexdigest()
+
 @app.post("/users/{model_name}")
 def create_user(model_name: str, user: UserIn):
+    validate_signup_data(user.name, user.phone_number, user.email, user.password, user.language, user.region)
+
     if model_name == 'farmer':
         model = Farmer
     elif model_name == 'enthusiast':
@@ -79,8 +82,20 @@ def create_user(model_name: str, user: UserIn):
     else:
         return {"message": "Invalid model name"}
 
-    add_user(model, user)
-    return {"message": "User created successfully"}
+    hashed_password = hash_password(user.password)
+    user_data = user.dict()
+    user_data['password'] = hashed_password
+
+    try:
+        with get_db() as db:
+            db_user = model(**user_data)
+            db.add(db_user)
+            db.commit()
+            user_id = db_user.id
+        return {"message": "User created successfully", "user_id": user_id}
+    except Exception as e:
+        return {"message": str(e)}
+
 
 @app.put("/users/{model_name}/{user_id}")
 def update_user_details(model_name: str, user_id: int, updates: UserIn):
@@ -132,35 +147,6 @@ async def login(user: User, authorization: str = Header(None)):
     user = authenticate_user(credentials)
     return {"message": "Welcome, {}!".format(user.username)}
     
-# signup
-
-def validate_signup_data(name: str, phone_number: str, email: str, password: str, language: str, state: str):
-    if not name or not phone_number or not email or not password or not language or not state:
-        raise HTTPException(status_code=400, detail="All fields are required")
-    if len(password) < 8:
-        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long")
-
-def hash_password(password: str):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-@app.post("/signup")
-async def signup(request: dict, db: Session = Depends(database.get_db)):
-    name = request.get("name")
-    phone_number = request.get("phone_number")
-    email = request.get("email")
-    password = request.get("password")
-    language = request.get("language")
-    state = request.get("state")
-
-    validate_signup_data(name, phone_number, email, password, language, state)
-
-    hashed_password = hash_password(password)
-
-    user = User(name=name, phone_number=phone_number, email=email, password=hashed_password, language=language, state=state)
-    db.add(user)
-    db.commit()
-
-    return {"message": "User registered successfully"}
 
 # implement dataset integration and district data retrieval
 
@@ -174,7 +160,13 @@ with open(file_path, "r") as f:
 async def get_district_data(district: str = Query(..., description="The district name")):
     district_data = data.get(district.upper())
     if district_data is None:
-        return {"error": "District not found"}
+        # If the district is not found, find the most similar district name
+        closest_match = difflib.get_close_matches(district.upper(), data.keys(), n=1, cutoff=0.5)
+        if closest_match:
+            district_data = data.get(closest_match[0])
+            return district_data
+        else:
+            return {"error": "District not found"}
     return district_data
 
 # implement scheme data retrieval
@@ -197,3 +189,4 @@ async def get_techniques():
     with open(file_path1, "r") as file:
         techniques = json.load(file)
     return techniques
+

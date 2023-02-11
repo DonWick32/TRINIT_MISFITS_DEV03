@@ -58,6 +58,7 @@ def add_user(model, user: UserIn):
         db_user = model(**user.dict())
         db.add(db_user)
         db.commit()
+        return db_user.id
 
 def update_user(model, user_id, updates: UserIn):
     with get_db() as db:
