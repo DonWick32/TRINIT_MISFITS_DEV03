@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/controllers/signup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,7 @@ class SignupPage extends GetView<SignupController> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: controller.nameController,
                     decoration: const InputDecoration(
                       labelText: 'Name',
                     ),
@@ -34,13 +36,14 @@ class SignupPage extends GetView<SignupController> {
                       return null;
                     },
                     onSaved: (value) {
-                      // Use this method to save the value entered by the user
                     },
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.phone,
+                    controller: controller.phoneController,
                     decoration: const InputDecoration(
                       labelText: 'Phone Number',
                     ),
@@ -58,6 +61,8 @@ class SignupPage extends GetView<SignupController> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: controller.emailController,
                     decoration: const InputDecoration(
                       labelText: 'Email ID',
                     ),
@@ -75,6 +80,7 @@ class SignupPage extends GetView<SignupController> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: controller.passwordController,
                     decoration: const InputDecoration(
                       labelText: 'Password',
                     ),
@@ -188,7 +194,8 @@ class SignupPage extends GetView<SignupController> {
                       ),
                     ),
                     onPressed: () {
-                      // Get.toNamed(NavigationRoutes.login, arguments: 'Expert');
+                      controller.signup();
+                      Get.toNamed(NavigationRoutes.home, arguments: userType);
                     },
                     child: const Text(
                       'Sign Up',

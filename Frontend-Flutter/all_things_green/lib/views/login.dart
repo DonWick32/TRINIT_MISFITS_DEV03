@@ -22,6 +22,7 @@ class LoginPage extends GetView<LoginController> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: controller.phoneController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50.0),
@@ -46,6 +47,7 @@ class LoginPage extends GetView<LoginController> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: controller.passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -75,7 +77,8 @@ class LoginPage extends GetView<LoginController> {
                     ),
                   ),
                   onPressed: () {
-                    // Get.toNamed(NavigationRoutes.login, arguments: 'Expert');
+                    controller.login();
+                    Get.toNamed(NavigationRoutes.home, arguments: userType);
                   },
                   child: const Text(
                     'Login',
