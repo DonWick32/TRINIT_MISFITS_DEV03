@@ -2,6 +2,7 @@
 import 'package:all_things_green/constants/app_constants.dart';
 import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/controllers/landing_controller.dart';
+import 'package:all_things_green/services/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:all_things_green/bindings/landing_binding.dart';
 import 'package:all_things_green/views/landing.dart';
@@ -33,6 +34,7 @@ Future<void> initServices() async {
 //     }, onError: (CometChatException e) {
 //       debugPrint("Initialization failed with exception: ${e.message}");
 //     });
+  await initNotifications();
 }
 
 class MyApp extends GetView<LandingController> {

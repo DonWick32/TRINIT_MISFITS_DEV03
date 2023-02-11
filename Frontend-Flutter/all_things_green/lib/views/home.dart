@@ -4,6 +4,9 @@ import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/views/chat.dart';
 import 'package:all_things_green/views/dashboard.dart';
 import 'package:all_things_green/views/login.dart';
+import 'package:all_things_green/views/plant.dart';
+import 'package:all_things_green/views/query.dart';
+import 'package:all_things_green/views/query.dart';
 import 'package:flutter/material.dart';
 import 'package:all_things_green/controllers/home_controller.dart';
 import 'package:get/get.dart';
@@ -13,21 +16,6 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final userType = Get.arguments.toString();
-    const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  const List<Widget> navPages = <Widget>[
-    // HomePage(),
-    ChatPage(),
-    LoginPage(),
-    // Text(
-    //   'Index 1: Business',
-    //   style: optionStyle,
-    // ),
-    // Text(
-    //   'Index 2: School',
-    //   style: optionStyle,
-    // ),
-  ];
 
     return GetBuilder<HomeController>(builder: ((controller){
       return Scaffold(
@@ -39,12 +27,13 @@ class HomePage extends GetView<HomeController> {
         children: [
           DashboardPage(),
           ChatPage(),
-          LoginPage(),
+          userType == 'Enthusiast' ? PlantPage() : LoginPage(),
+          QueryPage()
         ],
 
       ),
       bottomNavigationBar: BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
@@ -53,8 +42,15 @@ class HomePage extends GetView<HomeController> {
           icon: Icon(Icons.chat),
           label: 'Chat',
         ),
-        BottomNavigationBarItem(
+        userType == 'Enthusiast' ? BottomNavigationBarItem(
+          icon: Icon(Icons.nature),
+          label: 'Plant',
+        ) : BottomNavigationBarItem(
           icon: Icon(Icons.login),
+          label: 'Login',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.query_builder),
           label: 'Login',
         ),
         // BottomNavigationBarItem(
@@ -68,6 +64,7 @@ class HomePage extends GetView<HomeController> {
       ],
       currentIndex: controller.selectedIndex.value,
       selectedItemColor: Colors.amber[800],
+      unselectedItemColor: Colors.black,
       onTap: controller.onItemTapped,
       showSelectedLabels: false,
       showUnselectedLabels: false,
