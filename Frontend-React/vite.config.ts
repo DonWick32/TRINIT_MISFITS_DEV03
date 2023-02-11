@@ -6,6 +6,7 @@ import { BACKEND_URL } from "./config.example";
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [react()],
+	base: "/dashboard/",
 	server: {
 		port: PORT_CLIENT,
 		proxy: {
