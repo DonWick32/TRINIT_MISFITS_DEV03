@@ -8,7 +8,7 @@ import logging
 import database
 from typing import Optional
 from pydantic import BaseModel
-from fastapi import File, UploadFile, Form
+from fastapi import File, UploadFile, Form, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 from fastapi import FastAPI, Header, Depends, HTTPException,Query
@@ -41,6 +41,7 @@ class Item(BaseModel):
     state: str
 
 security = HTTPBasic()
+router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
