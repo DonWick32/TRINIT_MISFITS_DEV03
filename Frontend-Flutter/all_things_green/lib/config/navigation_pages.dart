@@ -6,6 +6,8 @@ import 'package:all_things_green/bindings/landing_binding.dart';
 import 'package:all_things_green/bindings/chat_binding.dart';
 import 'package:all_things_green/bindings/plant_binding.dart';
 import 'package:all_things_green/bindings/query_binding.dart';
+import 'package:all_things_green/bindings/techniques_binding.dart';
+import 'package:all_things_green/bindings/schemes_binding.dart';
 import 'package:all_things_green/views/login.dart';
 import 'package:all_things_green/views/home.dart';
 import 'package:all_things_green/views/dashboard.dart';
@@ -14,6 +16,8 @@ import 'package:all_things_green/views/signup.dart';
 import 'package:all_things_green/views/chat.dart';
 import 'package:all_things_green/views/landing.dart';
 import 'package:all_things_green/views/plant.dart';
+import 'package:all_things_green/views/schemes.dart';
+import 'package:all_things_green/views/techniques.dart';
 import 'package:get/get.dart';
 import 'package:all_things_green/constants/navigation_routes.dart';
 
@@ -61,8 +65,18 @@ class NavigationPages {
     ),
     GetPage(
       name: NavigationRoutes.query,
-      page: () => QueryPage(),
+      page: () => const QueryPage(),
       binding: QueryBinding(),
+    ),
+    GetPage(
+      name: NavigationRoutes.schemes,
+      page: () => const SchemesPage(),
+      binding: SchemesBinding(),
+    ),
+    GetPage(
+      name: NavigationRoutes.techniques,
+      page: () => const TechniquesPage(),
+      binding: TechniquesBinding(),
     ),
   ];
 }

@@ -3,6 +3,7 @@ import 'package:all_things_green/constants/app_constants.dart';
 import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/controllers/landing_controller.dart';
 import 'package:all_things_green/services/notification_services.dart';
+import 'package:all_things_green/services/storage_services.dart';
 import 'package:flutter/material.dart';
 import 'package:all_things_green/bindings/landing_binding.dart';
 import 'package:all_things_green/views/landing.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
 }
 
 Future<void> initServices() async {
+  await Get.putAsync(() => StorageServices().initStorage());
   await Get.putAsync(() => ApiServices().initApi());
 //   String appID = AppConstants.chatAppID; // Replace with your App ID
 //   String region = AppConstants.region; // Replace with your App Region ("eu" or "us")
