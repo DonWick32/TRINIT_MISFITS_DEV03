@@ -7,6 +7,8 @@ import 'package:all_things_green/views/login.dart';
 import 'package:all_things_green/views/plant.dart';
 import 'package:all_things_green/views/query.dart';
 import 'package:all_things_green/views/query.dart';
+import 'package:all_things_green/views/schemes.dart';
+import 'package:all_things_green/views/techniques.dart';
 import 'package:flutter/material.dart';
 import 'package:all_things_green/controllers/home_controller.dart';
 import 'package:get/get.dart';
@@ -28,7 +30,9 @@ class HomePage extends GetView<HomeController> {
           DashboardPage(),
           ChatPage(),
           userType == 'Enthusiast' ? PlantPage() : LoginPage(),
-          QueryPage()
+          QueryPage(),
+          TechniquesPage(),
+          userType == 'Farmer' ? SchemesPage() : LoginPage(),
         ],
 
       ),
@@ -51,6 +55,17 @@ class HomePage extends GetView<HomeController> {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.query_builder),
+          label: 'Query',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.science),
+          label: 'Techniques',
+        ),
+        userType == 'Farmer' ? BottomNavigationBarItem(
+          icon: Icon(Icons.table_chart_outlined),
+          label: 'Schemes',
+        ) : BottomNavigationBarItem(
+          icon: Icon(Icons.login),
           label: 'Login',
         ),
         // BottomNavigationBarItem(
@@ -67,7 +82,7 @@ class HomePage extends GetView<HomeController> {
       unselectedItemColor: Colors.black,
       onTap: controller.onItemTapped,
       showSelectedLabels: false,
-      showUnselectedLabels: false,
+      // showUnselectedLabels: false,
     ),
     );
     }));
