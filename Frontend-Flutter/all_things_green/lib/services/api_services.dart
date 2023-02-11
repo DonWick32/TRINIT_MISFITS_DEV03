@@ -98,5 +98,27 @@ Future<Map<String, String>> getTechniques() async {
     return Future.error(e);
   }
 }
+Future<Map<String, List<String>>> getCrops(String district) async {
+  try {
+    final response = await http.get(
+        Uri.parse(AppConstants.postCropsUrl + district));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      var data = <String, List<String>>{};
+      for (var key in json.keys) {
+        List<String> cropsList = List<String>.from(json[key]);
+        cropsList = cropsList.toSet().toList(); // Filter out duplicates
+        data[key.trim()] = cropsList;
+      }
+      return data;
+    } else {
+      return {};
+    }
+  } catch (e) {
+    print(e);
+    return Future.error(e);
+  }
+}
+
 
 }

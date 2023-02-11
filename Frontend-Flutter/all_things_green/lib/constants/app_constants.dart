@@ -5,4 +5,6 @@ class AppConstants {
   static String dataGovAPIKey = "579b464db66ec23bdd0000011e56e605409d43404a494e85e647647b";
   static String getTechniquesUrl = 'http://192.168.0.149:8000/techniques';
   static String getSchemesUrl = 'http://192.168.0.149:8000/schemes';
+  static String postCropsUrl = 'http://192.168.0.149:8000/district?district=';
+
 }
