@@ -15,9 +15,22 @@ from fastapi import FastAPI, Header, Depends, HTTPException,Query
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import hashlib
 from sqlalchemy.orm import Session
+from database import (
+    Farmer,
+    Enthusiast,
+    Expert,
+    UserIn,
+    UserOut,
+    get_users,
+    add_user,
+    update_user,
+    delete_user,
+)
 
 
 app = FastAPI()
+
+
 
 class Item(BaseModel):
     name: str
@@ -41,32 +54,60 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/farmers")
-async def get_farmers():
-    return database.get_farmers()
+@app.get("/users/{model_name}")
+def read_users(model_name: str):
+    if model_name == 'farmer':
+        model = Farmer
+    elif model_name == 'enthusiast':
+        model = Enthusiast
+    elif model_name == 'expert':
+        model = Expert
+    else:
+        return {"message": "Invalid model name"}
 
-@app.post("/signup/farmers")
-async def add_farmer(farmer: Item):
-    database.add_farmer(farmer)
-    return {"message": "Farmer added"}
+    return get_users(model)
 
-@app.get("/enthusiasts")
-async def get_enthusiasts():
-    return database.get_enthusiasts()
+@app.post("/users/{model_name}")
+def create_user(model_name: str, user: UserIn):
+    if model_name == 'farmer':
+        model = Farmer
+    elif model_name == 'enthusiast':
+        model = Enthusiast
+    elif model_name == 'expert':
+        model = Expert
+    else:
+        return {"message": "Invalid model name"}
 
-@app.post("/signup/enthusiasts")
-async def add_enthusiast(enthusiast: Item):
-    database.add_enthusiast(enthusiast)
-    return {"message": "Enthusiast added"}
+    add_user(model, user)
+    return {"message": "User created successfully"}
 
-@app.get("/experts")
-async def get_experts():
-    return database.get_experts()
+@app.put("/users/{model_name}/{user_id}")
+def update_user_details(model_name: str, user_id: int, updates: UserIn):
+    if model_name == 'farmer':
+        model = Farmer
+    elif model_name == 'enthusiast':
+        model = Enthusiast
+    elif model_name == 'expert':
+        model = Expert
+    else:
+        return {"message": "Invalid model name"}
 
-@app.post("/signup/experts")
-async def add_expert(expert: Item):
-    database.add_expert(expert)
-    return {"message": "Expert added"}
+    update_user(model, user_id, updates)
+    return {"message": "User updated successfully"}
+
+@app.delete("/users/{model_name}/{user_id}")
+def delete_a_user(model_name: str, user_id: int):
+    if model_name == 'farmer':
+        model = Farmer
+    elif model_name == 'enthusiast':
+        model = Enthusiast
+    elif model_name == 'expert':
+        model = Expert
+    else:
+        return {"message": "Invalid model name"}
+
+    delete_user(model, user_id)
+    return {"message": "User deleted successfully"}
 
 # login
 
