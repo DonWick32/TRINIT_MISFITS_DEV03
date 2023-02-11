@@ -67,6 +67,7 @@ class NavigationPages {
       name: NavigationRoutes.query,
       page: () => const QueryPage(),
       binding: QueryBinding(),
+      arguments: String,
     ),
     GetPage(
       name: NavigationRoutes.schemes,

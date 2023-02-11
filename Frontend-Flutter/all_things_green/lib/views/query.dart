@@ -9,6 +9,8 @@ class QueryPage extends GetView<QueryController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getUserType();
+    controller.getQueries();
     return GetBuilder<QueryController>(builder: ((controller){
     return Scaffold(
       body: Column(
@@ -182,7 +184,7 @@ Row(
             child: Column(
               children: <Widget>[
                 TextField(
-                  controller: controller.textController,
+                  controller: controller.replyController,
                   decoration: const InputDecoration(
                     hintText: "Enter your reply",
                     border: OutlineInputBorder(),
@@ -193,8 +195,8 @@ Row(
                   child: ElevatedButton(
                     child: const Text("Submit"),
                     onPressed: () {
-                        controller.addReply(controller.textController.text, index);
-                        controller.textController.clear();
+                        controller.addReply(controller.replyController.text, index);
+                        controller.replyController.clear();
                         Navigator.pop(context);
                     },
                   ),

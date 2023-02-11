@@ -23,4 +23,14 @@ class StorageServices extends GetxService {
     }
     return storage.read(StorageConstants.userID);
   }
+  Future<void> storeUserType(String userType) async {
+    await storage.write(StorageConstants.userType, userType);
+  }
+
+  String? getUserType() {
+    if (storage.read(StorageConstants.userType) == null) {
+      return null;
+    }
+    return storage.read(StorageConstants.userType);
+  }
 }

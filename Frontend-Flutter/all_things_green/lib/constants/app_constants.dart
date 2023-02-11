@@ -7,4 +7,6 @@ class AppConstants {
   static String getSchemesUrl = 'http://192.168.0.149:8000/schemes';
   static String postCropsUrl = 'http://192.168.0.149:8000/district?district=';
   static String postSignupUrl = 'http://192.168.0.149:8000/users/';
+  static String postQueryUrl = 'http://192.168.0.149:8000/query/';
+  static String getQueryUrl = 'http://192.168.0.149:8000/queries';
 }
