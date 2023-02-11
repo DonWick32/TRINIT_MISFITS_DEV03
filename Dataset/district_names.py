@@ -1,6 +1,6 @@
 import json
 
-with open("file.json", "r") as file:
+with open("crop_location_database.json", "r") as file:
     data = json.load(file)
 
 for item in data:
