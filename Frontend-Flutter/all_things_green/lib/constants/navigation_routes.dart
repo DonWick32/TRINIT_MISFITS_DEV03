@@ -6,4 +6,5 @@ class NavigationRoutes {
   static String chat = '/chat';
   static String dashboard = '/dashboard';
   static String plant = '/plant';
+  static String query = '/query';
 }

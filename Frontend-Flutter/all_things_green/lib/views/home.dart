@@ -6,7 +6,7 @@ import 'package:all_things_green/views/dashboard.dart';
 import 'package:all_things_green/views/login.dart';
 import 'package:all_things_green/views/plant.dart';
 import 'package:all_things_green/views/query.dart';
-import 'package:all_things_green/views/query2.dart';
+import 'package:all_things_green/views/query.dart';
 import 'package:flutter/material.dart';
 import 'package:all_things_green/controllers/home_controller.dart';
 import 'package:get/get.dart';
@@ -27,7 +27,7 @@ class HomePage extends GetView<HomeController> {
         children: [
           DashboardPage(),
           ChatPage(),
-          userType == 'Enthusiast' ? PlantPage() : LoginPage()
+          userType == 'Enthusiast' ? PlantPage() : LoginPage(),
           QueryPage()
         ],
 
@@ -64,6 +64,7 @@ class HomePage extends GetView<HomeController> {
       ],
       currentIndex: controller.selectedIndex.value,
       selectedItemColor: Colors.amber[800],
+      unselectedItemColor: Colors.black,
       onTap: controller.onItemTapped,
       showSelectedLabels: false,
       showUnselectedLabels: false,

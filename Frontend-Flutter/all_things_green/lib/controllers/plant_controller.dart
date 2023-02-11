@@ -12,7 +12,7 @@ class PlantController extends GetxController {
     print(hours);
 scheduleNotification(hours, minutes)
     .then((value) {
-        Get.snackbar("Notification", "Notification set for $hours:$minutes");
+        Get.snackbar("Notification", "Daily notification reminder set for $hours:$minutes");
     })
     .catchError((error) {
         print(error.toString());

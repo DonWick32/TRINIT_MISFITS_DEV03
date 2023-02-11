@@ -1,207 +1,210 @@
-
-import 'package:comment_tree/comment_tree.dart';
+import 'package:all_things_green/controllers/query_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class QueryPage extends GetView<QueryController> {
 
-  final String title;
+  const QueryPage({super.key});
+  
 
   @override
-  MyHomePageState createState() => MyHomePageState();
-}
+  Widget build(BuildContext context) {
+    return GetBuilder<QueryController>(builder: ((controller){
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: controller.textController,
+              decoration: const InputDecoration(
+                hintText: "Enter your query",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            child: const Text("Post"),
+            onPressed: () {
+              controller.addCard(controller.textController.text);
+              controller.textController.clear();
+            },
+          ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              onChanged: ((value) => controller.search(controller.searchController.text)),
+              controller: controller.searchController,
+              decoration: const InputDecoration(
+                hintText: "Search query",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          Container(
+            child: ElevatedButton(
+              child: const Text("Clear"),
+              onPressed: () {
+                controller.searchController.clear();
+                controller.search("");
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: controller.queries.length,
+              itemBuilder: (context, index) {
+                return Column(
+                    children: [
+                      Card(
+                        margin: const EdgeInsets.all(10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                controller.queries[index]['text'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: const Icon(Icons.thumb_up),
+                                    onPressed: (() => controller.upvote(index)),
+                                  ),
+                                  Text("${controller.queries[index]['upvotes']} upvotes"),
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                    icon: const Icon(Icons.reply),
+                                    onPressed: () {
+                                      showReplyDialog(context, index);
+                                    },
+                                  ),
+                                ],
+                              ),
+Row(
+  children: [
+    Text("Replies: "),
+    controller.queries[index]['replies'].length == 0 ? Text("No replies yet") :
+    ElevatedButton(
+      child: Text("View Replies"),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Replies"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: controller.queries[index]['replies'].map<Padding>((reply) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(reply),
+                    )),
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        );
+      },
+    ),
+  ],
+)
 
-class MyHomePageState extends State<MyHomePage> {
-  late String _message;
+                            ],
+                          ),
+                        ),
+                      ),
 
-  void _showReplyDialog() {
+
+
+                      // ...controller.queries[index]['replies'].map((reply) {
+                      //   return Container(
+                      //     margin: const EdgeInsets.only(left: 50),
+                      //     child: Card(
+                      //       margin: const EdgeInsets.all(10),
+                      //       child: Padding(
+                      //         padding: const EdgeInsets.all(10),
+                      //         child: Text(reply),
+                      //       ),
+                      //     ),
+                      //   );
+                      // }).toList(),
+                      
+//                       Row(
+//                         children: [
+//                           Text("Replies: "),
+//                           DropdownButton(
+//   value: controller.queries[index]['replies'][0],
+//   items: controller.queries[index]['replies'].map<DropdownMenuItem<dynamic>>((reply) {
+//     return DropdownMenuItem(
+//       value: reply,
+//       child: Text(reply),
+//     );
+//   }).toList() as List<DropdownMenuItem<dynamic>>,
+//   onChanged: (selectedReply) {
+//     // do something with selectedReply
+//   },
+// ),
+//                         ],
+//                       )
+
+
+                    ],
+                  );
+              },
+            ),
+          ),
+        ],
+      ),
+    );}));
+  }
+
+
+  
+
+ void showReplyDialog(BuildContext context, int index) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Enter your message"),
-          content: TextField(
-            onChanged: (value) {
-              _message = value;
-            },
+          title: const Text("Reply"),
+          content: Container(
+            height: 200,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: controller.textController,
+                  decoration: const InputDecoration(
+                    hintText: "Enter your reply",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: ElevatedButton(
+                    child: const Text("Submit"),
+                    onPressed: () {
+                        controller.addReply(controller.textController.text, index);
+                        controller.textController.clear();
+                        Navigator.pop(context);
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
-          actions: [
-            ElevatedButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Reply"),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
   }
 
-  
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        // ignore: sort_child_properties_last
-        child: CommentTreeWidget<Comment, Comment>(
-          Comment(
-              avatar: 'null',
-              userName: 'null',
-              content: 'felangel made felangel/cubit_and_beyond public '),
-          [
-            Comment(
-                avatar: 'null',
-                userName: 'null',
-                content: 'A Dart template generator which helps teams'),
-            Comment(
-                avatar: 'null',
-                userName: 'null',
-                content:
-                    'A Dart template generator which helps teams generator which helps teams generator which helps teams'),
-            Comment(
-                avatar: 'null',
-                userName: 'null',
-                content: 'A Dart template generator which helps teams'),
-            Comment(
-                avatar: 'null',
-                userName: 'null',
-                content:
-                    'A Dart template generator which helps teams generator which helps teams '),
-          ],
-          treeThemeData:
-              TreeThemeData(lineColor: Colors.green[500]!, lineWidth: 3),
-          avatarRoot: (context, data) => const PreferredSize(
-            preferredSize: Size.fromRadius(18),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.grey,
-              backgroundImage: AssetImage('assets/avatar_2.png'),
-            ),
-          ),
-          avatarChild: (context, data) => const PreferredSize(
-            preferredSize: Size.fromRadius(12),
-            child: CircleAvatar(
-              radius: 12,
-              backgroundColor: Colors.grey,
-              backgroundImage: AssetImage('assets/avatar_1.png'),
-            ),
-          ),
-          contentChild: (context, data) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'dangngocduc',
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontWeight: FontWeight.w600, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        '${data.content}',
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: Theme.of(context).textTheme.caption!.copyWith(
-                      color: Colors.grey[700], fontWeight: FontWeight.bold),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Row(
-                      children: const [
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text('Like'),
-                        SizedBox(
-                          width: 24,
-                        ),
-                        Text('Reply'),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            );
-          },
-          contentRoot: (context, data) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'dangngocduc',
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontWeight: FontWeight.w600, color: Colors.black),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        '${data.content}',
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: Theme.of(context).textTheme.caption!.copyWith(
-                      color: Colors.grey[700], fontWeight: FontWeight.bold),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Row(
-                      children: const [
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text('Like'),
-                        SizedBox(
-                          width: 24,
-                        ),
-                        Text('Reply'),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            );
-          },
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      ),
-    );
-  }
 }

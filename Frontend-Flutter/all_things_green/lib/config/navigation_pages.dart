@@ -5,9 +5,11 @@ import 'package:all_things_green/bindings/signup_binding.dart';
 import 'package:all_things_green/bindings/landing_binding.dart';
 import 'package:all_things_green/bindings/chat_binding.dart';
 import 'package:all_things_green/bindings/plant_binding.dart';
+import 'package:all_things_green/bindings/query_binding.dart';
 import 'package:all_things_green/views/login.dart';
 import 'package:all_things_green/views/home.dart';
 import 'package:all_things_green/views/dashboard.dart';
+import 'package:all_things_green/views/query.dart';
 import 'package:all_things_green/views/signup.dart';
 import 'package:all_things_green/views/chat.dart';
 import 'package:all_things_green/views/landing.dart';
@@ -56,6 +58,11 @@ class NavigationPages {
       name: NavigationRoutes.plant,
       page: () => const PlantPage(),
       binding: PlantBinding(),
+    ),
+    GetPage(
+      name: NavigationRoutes.query,
+      page: () => QueryPage(),
+      binding: QueryBinding(),
     ),
   ];
 }
