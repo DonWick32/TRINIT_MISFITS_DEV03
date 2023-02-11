@@ -4,6 +4,7 @@ import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/views/chat.dart';
 import 'package:all_things_green/views/dashboard.dart';
 import 'package:all_things_green/views/login.dart';
+import 'package:all_things_green/views/plant.dart';
 import 'package:all_things_green/views/query.dart';
 import 'package:all_things_green/views/query2.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +27,13 @@ class HomePage extends GetView<HomeController> {
         children: [
           DashboardPage(),
           ChatPage(),
-          LoginPage(),
+          userType == 'Enthusiast' ? PlantPage() : LoginPage()
           QueryPage()
         ],
 
       ),
       bottomNavigationBar: BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
@@ -41,7 +42,10 @@ class HomePage extends GetView<HomeController> {
           icon: Icon(Icons.chat),
           label: 'Chat',
         ),
-        BottomNavigationBarItem(
+        userType == 'Enthusiast' ? BottomNavigationBarItem(
+          icon: Icon(Icons.nature),
+          label: 'Plant',
+        ) : BottomNavigationBarItem(
           icon: Icon(Icons.login),
           label: 'Login',
         ),

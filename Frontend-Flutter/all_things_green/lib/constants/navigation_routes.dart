@@ -5,4 +5,5 @@ class NavigationRoutes {
   static String home = '/home';
   static String chat = '/chat';
   static String dashboard = '/dashboard';
+  static String plant = '/plant';
 }
