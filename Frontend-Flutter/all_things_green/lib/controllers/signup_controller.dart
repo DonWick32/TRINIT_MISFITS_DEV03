@@ -1,14 +1,16 @@
-// import 'package:all_things_green/services/api_services.dart';
+import 'package:all_things_green/services/api_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
-  // final api = Get.find<ApiServices>().api;
+  final api = Get.find<ApiServices>().api;
 
-  final mobileController = TextEditingController();
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final selectedState = 'Andhra Pradesh'.obs;
-  final selectedLanguage= 'English'.obs;
+  final selectedLanguages = [].obs;
   final List<String> states = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
@@ -66,7 +68,7 @@ class SignupController extends GetxController {
 ];
 
   void login() async {
-    final mobile = mobileController.text;
+    final mobile = phoneController.text;
     final password = passwordController.text;
     if (mobile.isEmpty || password.isEmpty) {
       Get.snackbar('Invalid Credentials', 'Unable To Login');
@@ -82,5 +84,20 @@ class SignupController extends GetxController {
     //   isLoading.value = false;
     //   Get.snackbar('Failed To Login', err.toString());
     // });
+  }
+  void updateLanguages(List<dynamic> valueList) {
+    selectedLanguages.clear();
+    for (int i = 0; i < valueList.length; i++) {
+        selectedLanguages.add(languages[valueList[i]]);
+    }
+    print(selectedLanguages);
+  }
+  void signup(){
+    print(nameController.text);
+    print(phoneController.text);
+    print(emailController.text);
+    print(passwordController.text);
+    print(selectedState.value);
+    print(selectedLanguages);
   }
 }
