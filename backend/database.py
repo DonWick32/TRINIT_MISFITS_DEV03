@@ -1,3 +1,5 @@
+import datetime
+from xmlrpc.client import DateTime
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
 from pydantic import BaseModel
@@ -27,6 +29,13 @@ class Enthusiast(UserBase):
 class Expert(UserBase):
     __tablename__ = 'expert'
 
+class Query1(Base):
+    __tablename__ = "queries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, index=True)
+    query_string = Column(String, index=True)
+
 Base.metadata.create_all(bind=engine)
 
 class UserIn(BaseModel):
@@ -53,6 +62,11 @@ def get_users(model):
         users = db.query(model).all()
     return [UserOut(id=user.id, name=user.name, phone_number=user.phone_number, email=user.email, region=user.region, language=user.language, password=user.password) for user in users]
 
+def get_query():
+    with get_db() as db:
+        query = db.query(Query1).all()
+    return [Query1(id=query.id, sender_id=query.sender_id, query_string=query.query_string) for query in query]
+    
 def add_user(model, user: UserIn):
     with get_db() as db:
         db_user = model(**user.dict())

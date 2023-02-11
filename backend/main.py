@@ -14,15 +14,23 @@ from fastapi.responses import Response, JSONResponse
 from fastapi import FastAPI, Header, Depends, HTTPException,Query
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import hashlib
+import uuid
+import psycopg2
+
 import difflib
+import jwt
+import datetime
 from sqlalchemy.orm import Session
 from database import (
     Farmer,
     Enthusiast,
     Expert,
+    Query1,
+    SessionLocal,
     UserIn,
     UserOut,
     get_db,
+    get_query,
     get_users,
     add_user,
     update_user,
@@ -32,6 +40,7 @@ from database import (
 app = FastAPI()
 
 security = HTTPBasic()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -57,6 +66,10 @@ def read_users(model_name: str):
         return {"message": "Invalid model name"}
 
     return get_users(model)
+
+@app.get("/queries")
+def read_queries():
+    return get_query()
 
 # Create a new user
 
@@ -127,25 +140,31 @@ def delete_a_user(model_name: str, user_id: int):
 
 # login
 
+SECRET_KEY = "secret_key"
+ALGORITHM = "HS256"
+
 class User(BaseModel):
     username: str
     password: str
 
-def authenticate_user(credentials: HTTPBasicCredentials = Depends(security)):
-    user = User.get(credentials.username)
-    if user is None:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    if credentials.password != user.password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    return user
+def authenticate_user(credentials: HTTPBasicCredentials = Depends(HTTPBasic())):
+    try:
+        user = User.get(credentials.username)
+        if user is None:
+            raise HTTPException(status_code=400, detail="Incorrect username or password")
+        if credentials.password != user.password:
+            raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+        payload = {"sub": user.username, "iat": datetime.utcnow()}
+        token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM).decode("utf-8")
+        return {"access_token": token, "token_type": "bearer"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error in authentication")
 
 @app.post("/login")
-async def login(user: User, authorization: str = Header(None)):
-    if authorization is None:
-        return {"message": "Please provide credentials"}
-    credentials = HTTPBasicCredentials(user.username, user.password)
-    user = authenticate_user(credentials)
-    return {"message": "Welcome, {}!".format(user.username)}
+async def login(credentials: HTTPBasicCredentials = Depends(HTTPBasic())):
+    return authenticate_user(credentials)
+
     
 
 # implement dataset integration and district data retrieval
@@ -190,3 +209,26 @@ async def get_techniques():
         techniques = json.load(file)
     return techniques
 
+@app.post("/query/{model_name}")
+def create_query(model_name: str, sender_id: int, query_string: str):
+    if model_name == 'farmer':
+        model = Farmer
+    elif model_name == 'enthusiast':
+        model = Enthusiast
+    elif model_name == 'expert':
+        model = Expert
+    else:
+        return {"message": "Invalid model name"}
+
+    try:
+        with get_db() as db:
+            sender = db.query(model).filter(model.id == sender_id).first()
+            if not sender:
+                return {"message": "Sender not found"}
+            query = Query1(sender_id=sender_id, query_string=query_string)
+            db.add(query)
+            db.commit()
+            query_id = query.id
+        return {"message": "Query created successfully", "query_id": query_id}
+    except Exception as e:
+        return {"message": str(e)}
