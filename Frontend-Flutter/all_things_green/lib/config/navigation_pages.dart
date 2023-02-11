@@ -1,8 +1,14 @@
 import 'package:all_things_green/bindings/login_binding.dart';
+import 'package:all_things_green/bindings/home_binding.dart';
+import 'package:all_things_green/bindings/dashboard_binding.dart';
 import 'package:all_things_green/bindings/signup_binding.dart';
 import 'package:all_things_green/bindings/landing_binding.dart';
+import 'package:all_things_green/bindings/chat_binding.dart';
 import 'package:all_things_green/views/login.dart';
+import 'package:all_things_green/views/home.dart';
+import 'package:all_things_green/views/dashboard.dart';
 import 'package:all_things_green/views/signup.dart';
+import 'package:all_things_green/views/chat.dart';
 import 'package:all_things_green/views/landing.dart';
 import 'package:get/get.dart';
 import 'package:all_things_green/constants/navigation_routes.dart';
@@ -25,6 +31,24 @@ class NavigationPages {
       name: NavigationRoutes.landing,
       page: () => const LandingPage(),
       binding: LandingBinding(),
+    ),
+    GetPage(
+      name: NavigationRoutes.home,
+      page: () => const HomePage(),
+      binding: HomeBinding(),
+      arguments: String,
+    ),
+    GetPage(
+      name: NavigationRoutes.chat,
+      page: () => const ChatPage(),
+      binding: ChatBinding(),
+      arguments: String,
+    ),
+    GetPage(
+      name: NavigationRoutes.dashboard,
+      page: () => const DashboardPage(),
+      binding: DashboardBinding(),
+      arguments: String,
     ),
   ];
 }
