@@ -1,9 +1,12 @@
+import 'package:all_things_green/constants/navigation_routes.dart';
 import 'package:all_things_green/services/api_services.dart';
+import 'package:all_things_green/services/storage_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
   final api = Get.find<ApiServices>().api;
+  final storage = Get.find<StorageServices>();
 
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
@@ -92,12 +95,26 @@ class SignupController extends GetxController {
     }
     print(selectedLanguages);
   }
-  void signup(){
-    print(nameController.text);
-    print(phoneController.text);
-    print(emailController.text);
-    print(passwordController.text);
-    print(selectedState.value);
-    print(selectedLanguages);
+  void signup(String userType) async {
+  Map<String, String> signupRequest = {
+    "name": nameController.text,
+    "phone_number": phoneController.text,
+    "email": emailController.text,
+    "region": selectedState.value,
+    "language": selectedLanguages[0],
+    "password": passwordController.text
+  };
+
+  try {
+    final String response = await api.signup(signupRequest, userType, storage);
+    print(response);
+    Get.snackbar('Success', response);
+    if (response == "User created successfully"){
+      Get.toNamed(NavigationRoutes.home, arguments: userType);
+    }
+    print(storage.getUser());
+  } catch (e) {
+    Get.snackbar('Failure', e.toString());
   }
+}
 }

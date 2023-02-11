@@ -20,6 +20,10 @@ class DashboardPage extends GetView<DashboardController> {
                 onPressed: controller.getCrops,
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Obx(() => Text("Your District: ${controller.district.value}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
+            ),
             Expanded(
               child: Obx(
                 () => ListView.builder(

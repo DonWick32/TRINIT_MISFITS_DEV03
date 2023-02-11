@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:all_things_green/constants/app_constants.dart';
+import 'package:all_things_green/services/storage_services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -120,5 +121,24 @@ Future<Map<String, List<String>>> getCrops(String district) async {
   }
 }
 
+Future<String> signup(Map<String, String> signupRequest, String userType, StorageServices storageServices) async {
+  try {
+    final response = await http.post(
+        Uri.parse(AppConstants.postSignupUrl + userType.toLowerCase()),
+        body: jsonEncode(signupRequest),
+        headers: {'Content-Type': 'application/json'});
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      await storageServices.storeUser(json['user_id']);
+      return json['message'];
+    } else {
+      return 'User creation failed';
+    }
+  } catch (e) {
+    print(e);
+    return Future.error(e);
+  }
+}
 
 }

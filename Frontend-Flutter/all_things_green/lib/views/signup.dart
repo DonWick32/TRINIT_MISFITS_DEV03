@@ -194,8 +194,8 @@ class SignupPage extends GetView<SignupController> {
                       ),
                     ),
                     onPressed: () {
-                      controller.signup();
-                      Get.toNamed(NavigationRoutes.home, arguments: userType);
+                      controller.signup(userType);
+                      // Get.toNamed(NavigationRoutes.home, arguments: userType);
                     },
                     child: const Text(
                       'Sign Up',

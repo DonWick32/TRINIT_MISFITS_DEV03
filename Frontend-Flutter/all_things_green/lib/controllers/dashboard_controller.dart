@@ -5,7 +5,11 @@ import 'package:get/get.dart';
 class DashboardController extends GetxController {
     final api = Get.find<ApiServices>().api;
     final data = {}.obs;
+    final district = "".obs;
   void getCrops() async{
+    data.value = {};
+    district.value = "";
+    update();
     LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
@@ -29,6 +33,8 @@ print(position.latitude); //Output: 29.6593457
       // }, onError: (err) {
       //   print(err);
       // });
+      district.value = value;
+      update();
       api.getCrops(value).then((value) {
         data.value = value;
         print(value);
