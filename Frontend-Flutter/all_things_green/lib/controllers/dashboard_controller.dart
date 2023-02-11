@@ -9,6 +9,7 @@ class DashboardController extends GetxController {
 
     if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
+    }
     if (permission == LocationPermission.denied) {
         print('Location permissions are denied');
     }else if(permission == LocationPermission.deniedForever){
@@ -32,9 +33,6 @@ print(position.latitude); //Output: 29.6593457
       print(err);
     });
     }
-}else{
-    print("GPS Location permission granted.");
-}
     
   }
 }
