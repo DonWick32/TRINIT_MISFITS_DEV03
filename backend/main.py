@@ -176,3 +176,24 @@ async def get_district_data(district: str = Query(..., description="The district
     if district_data is None:
         return {"error": "District not found"}
     return district_data
+
+# implement scheme data retrieval
+
+current_directory = os.getcwd()
+file_path = os.path.abspath(os.path.join(current_directory, os.pardir, "Dataset", "schemes.json"))
+
+@app.get("/schemes")
+async def get_schemes():
+    with open(file_path, "r") as file:
+        schemes = json.load(file)
+    return schemes
+
+# implement modern techniques data retrieval
+current_directory = os.getcwd()
+file_path1 = os.path.abspath(os.path.join(current_directory, os.pardir, "Dataset", "modern_techniques.json"))
+
+@app.get("/techniques")
+async def get_techniques():
+    with open(file_path1, "r") as file:
+        techniques = json.load(file)
+    return techniques
