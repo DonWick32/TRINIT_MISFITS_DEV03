@@ -1,83 +1,79 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
+from pydantic import BaseModel
+from contextlib import contextmanager
 
 DATABASE_URL = "postgresql://a:ab@localhost/tri"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-class Farmer(Base):
+class UserBase(Base):
+    __abstract__ = True
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    phone_number = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    region = Column(String, nullable=False)
+    language = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+
+class Farmer(UserBase):
     __tablename__ = 'farmer'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    region = Column(String, nullable=False)
-    language = Column(String, nullable=False)
-    password = Column(String, nullable=False)
 
-class Enthusiast(Base):
+class Enthusiast(UserBase):
     __tablename__ = 'enthusiast'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    region = Column(String, nullable=False)
-    language = Column(String, nullable=False)
-    password = Column(String, nullable=False)
 
-class Expert(Base):
+class Expert(UserBase):
     __tablename__ = 'expert'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    region = Column(String, nullable=False)
-    language = Column(String, nullable=False)
-    password = Column(String, nullable=False)
 
 Base.metadata.create_all(bind=engine)
 
+class UserIn(BaseModel):
+    name: str
+    phone_number: str
+    email: str
+    region: str
+    language: str
+    password: str
 
+class UserOut(UserIn):
+    id: int
+
+@contextmanager
 def get_db():
+    session = SessionLocal()
     try:
-        db = SessionLocal()
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
 
-def get_farmers():
-    farmers = []
+def get_users(model):
     with get_db() as db:
-        farmers = db.query(Farmer).all()
-    return farmers
+        users = db.query(model).all()
+    return [UserOut(id=user.id, name=user.name, phone_number=user.phone_number, email=user.email, region=user.region, language=user.language, password=user.password) for user in users]
 
-def get_enthusiasts():
-    enthusiasts = []
+def add_user(model, user: UserIn):
     with get_db() as db:
-        enthusiasts = db.query(Enthusiast).all()
-    return enthusiasts
-
-def get_experts():
-    experts = []
-    with get_db() as db:
-        experts = db.query(Expert).all()
-    return experts
-
-def add_farmer(farmer: Farmer):
-    with get_db() as db:
-        db.add(farmer)
+        db_user = model(**user.dict())
+        db.add(db_user)
         db.commit()
 
-def add_enthusiast(enthusiast: Enthusiast):
+def update_user(model, user_id, updates: UserIn):
     with get_db() as db:
-        db.add(enthusiast)
-        db.commit()
+        db_user = db.query(model).get(user_id)
+        if db_user:
+            for key, value in updates.dict().items():
+                setattr(db_user, key, value)
+            db.commit()
+        else:
+            raise Exception(f"User with id {user_id} not found.")
 
-def add_expert(expert: Expert):
+def delete_user(model, user_id):
     with get_db() as db:
-        db.add(expert)
-        db.commit()
-
-
-
+        db_user = db.query(model).get(user_id)
+        if db_user:
+            db.delete(db_user)
+            db.commit()
+        else:
+            raise Exception(f"User with id {user_id} not found.")
