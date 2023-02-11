@@ -7,4 +7,6 @@ class NavigationRoutes {
   static String dashboard = '/dashboard';
   static String plant = '/plant';
   static String query = '/query';
+  static String schemes = '/schemes';
+  static String techniques = '/techniques';
 }
