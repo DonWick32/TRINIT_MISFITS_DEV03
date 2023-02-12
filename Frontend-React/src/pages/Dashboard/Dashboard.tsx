@@ -19,9 +19,7 @@ const Dashboard = () => {
 						</div>
 					</>
 				) : (
-					<>
-						<CropSuggestions />
-					</>
+					""
 				)}
 			</div>
 			{showLogin && (

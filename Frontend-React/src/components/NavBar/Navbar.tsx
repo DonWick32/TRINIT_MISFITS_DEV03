@@ -51,6 +51,22 @@ export const Navbar = () => {
 				>
 					<span className="text-[20px] font-bold text-black">QUERY</span>
 				</Button>
+				<Button
+					variant="light"
+					onClick={() => {
+						navigate("/schemes");
+					}}
+				>
+					<span className="text-[20px] font-bold text-black">SCHEMES</span>
+				</Button>
+				<Button
+					variant="light"
+					onClick={() => {
+						navigate("/crops");
+					}}
+				>
+					<span className="text-[20px] font-bold text-black">CROPS</span>
+				</Button>
 			</div>
 		</div>
 	);
