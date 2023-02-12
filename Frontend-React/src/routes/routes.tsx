@@ -1,6 +1,6 @@
 import React from "react";
 import "./types.d";
-import { Dashboard, Login } from "../pages";
+import { Dashboard } from "../pages";
 import { ChatPage } from "../pages/Chat/ChatPage";
 import { Query } from "../pages/Query/Query";
 import { Schemes } from "../pages/CropSuggestions/CropSuggestions";
@@ -10,7 +10,7 @@ import { Tech } from "../pages/Tech/Tech";
 export const publicRoutes: RouteType[] = [
 	{
 		path: "/login",
-		element: <Login />,
+		element: <></>,
 		title: "Login",
 		description: "Login Page",
 	},

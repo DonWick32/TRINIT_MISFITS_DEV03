@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
-export const Navbar = () => {
+export const Navbar = (props: {
+	handleLogin: (arg: boolean) => void;
+	showsignup: boolean;
+}) => {
 	const navigate = useNavigate();
 	const [showLogin, setShowLogin] = useState(false);
 	return (
@@ -21,11 +24,11 @@ export const Navbar = () => {
 				<Button
 					variant="light"
 					onClick={() => {
-						setShowLogin(!showLogin);
+						props.handleLogin(!props.showsignup);
 					}}
 					className="text-[20px] font-bold text-black"
 				>
-					<span className="text-[20px] text-black">LOGIN</span>
+					<span className="text-[20px] text-black">SIGNUP</span>
 				</Button>
 				<Button
 					onClick={() => {

@@ -1,14 +1,23 @@
 import React from "react";
 import { Textarea } from "@mantine/core";
 import { useRef } from "react";
-import { Button, Group } from "@mantine/core";
-import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
+import axios from "axios";
 
 export const CreatePost = () => {
-	const openRef = useRef<() => void>(null);
-	function handleSubmit() {
-		throw new Error("Function not implemented.");
-	}
+	const handleSubmit = async () => {
+		console.log(ref.current?.value);
+		const data = {
+			question: ref.current?.value,
+			sender_id: localStorage.getItem("id"),
+			sender_type: localStorage.getItem("type"),
+		};
+		const resp = await axios.post(
+			`http://localhost:8000/query/${data.sender_type}?sender_id=${data.sender_id}&query_string=${data.question}`
+		);
+		console.log(resp);
+		window.location.reload();
+	};
+	const ref = useRef(null);
 
 	return (
 		<div className="flex flex-col min-h-[350px] rounded-[15px] w-[50%] bg-white items-center justify-start">
@@ -29,33 +38,12 @@ export const CreatePost = () => {
 					autosize
 					minRows={8}
 					maxRows={9}
+					ref={ref}
+					onSubmit={() => {
+						handleSubmit();
+					}}
 				/>
 			</div>
-			<Dropzone
-				accept={[
-					MIME_TYPES.png,
-					MIME_TYPES.jpeg,
-					MIME_TYPES.svg,
-					MIME_TYPES.gif,
-				]}
-				openRef={openRef}
-				onDrop={() => {}}
-				activateOnClick={false}
-				styles={{ inner: { pointerEvents: "all" } }}
-			>
-				<Group position="center">
-					<button
-						onClick={() => {
-							openRef.current?.();
-						}}
-						className="w-fit p-4 flex items-center justify-center h-fit bg-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.8)] rounded-[10px]"
-					>
-						<span className="text-[12px] font-mono font-bold text-white">
-							SELECT FILE
-						</span>
-					</button>
-				</Group>
-			</Dropzone>
 			<div className="basis-[20%] w-full flex flex-row items-center justify-center">
 				<button
 					onClick={() => {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
 import axios from "axios";
 import { CreatePost } from "../pages/Query/CreatePost";
 import { PostCard } from "../pages/Query/PostCard";
+import { useNavigate } from "react-router-dom";
 
 export const PostPage = () => {
 	const [posts, setPosts] = useState(false);
+	const [data, setData] = useState([]);
 	const [district, setDistrict] = useState("");
 	const openCageAPIKey = "72ff223ae47c4b14ab8a5a9d92e0b8a3";
 	const Location = async () => {
@@ -19,6 +19,8 @@ export const PostPage = () => {
 			const district = await resp.data.results[0].components.county;
 			setDistrict(district);
 		});
+		const postResponse = await axios.get("http://localhost:8000/queries");
+		setData(postResponse.data);
 	};
 	console.log(district);
 	useEffect(() => {
@@ -27,15 +29,18 @@ export const PostPage = () => {
 	function handleCreatePost(arg0: boolean) {
 		setPosts(arg0);
 	}
+	const navigate = useNavigate();
 	return (
-		<div className="basis-[80%] w-full h-full flex flex-col items-center justify-start">
-			<div className="basis-[10%] h-full w-full bg-[rgba(2,5,7,0.50)] flex flex-row items-center gap-12 justify-center">
-				<Input
-					icon={<IconSearch />}
-					size="lg"
-					classNames={{ input: "w-[350px] text-black rounded-[12px]" }}
-					placeholder="Search Here"
-				/>
+		<div className="basis-[100%] w-full h-full flex flex-col items-center justify-start">
+			<div className="basis-[10%] h-full w-full bg-[rgba(2,5,7,0.50)] flex flex-row items-center gap-16 justify-center">
+				<span
+					onClick={() => {
+						navigate("/");
+					}}
+					className="font-poppins text-[40px] font-extrabold tracking-wide text-white"
+				>
+					Agriculture
+				</span>
 				<div className="flex flex-row gap-2 items-center justify-center">
 					<IconPlus
 						onClick={() => {
@@ -48,12 +53,12 @@ export const PostPage = () => {
 			</div>
 			<div className="basis-[90%] max-h-[100%] overflow-y-scroll pt-10 h-full w-full gap-8 flex flex-col items-center justify-start">
 				{posts && <CreatePost />}
-				<PostCard />
-				<PostCard />
-				<PostCard />
-				<PostCard />
-				<PostCard />
-				<PostCard />
+				{data.map((post) => {
+					return (
+						// eslint-disable-next-line react/jsx-key
+						<PostCard id={post.sender_id} query={post.query_string} />
+					);
+				})}
 			</div>
 		</div>
 	);

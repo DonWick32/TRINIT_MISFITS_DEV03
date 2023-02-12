@@ -1,22 +1,20 @@
 import React, { useState } from "react";
-import {
-	Box,
-	Group,
-	MultiSelect,
-	PasswordInput,
-	Select,
-	TextInput,
-} from "@mantine/core";
+import axios from "axios";
+import { Box, Group, PasswordInput, Select, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
-export const Login = () => {
+export const Login = (props: {
+	handleClick: (arg: boolean) => void;
+	showsignup: boolean;
+}) => {
 	const form = useForm({
 		initialValues: {
 			name: "",
-			job: "",
+			phone_number: "",
 			email: "",
-			favoriteColor: "",
-			age: 18,
+			region: "",
+			language: "dvcdfx",
+			password: "",
 		},
 	});
 	const handleClick = (typeOfUser: string) => {
@@ -39,140 +37,210 @@ export const Login = () => {
 	const [expert, setExpert] = useState(false);
 
 	const [searchValue, onSearchChange] = useState("");
-	const data = [
-		{ value: "english", label: "English" },
-		{ value: "tamil", label: "Tamil" },
-		{ value: "telugu", label: "Telugu" },
-		{ value: "malayalam", label: "Malayalam" },
-		{ value: "kannada", label: "Kannada" },
-		{ value: "hindi", label: "Hindi" },
-	];
+	const [langValue, onLangChange] = useState("");
+	const [submittedValues, setSubmittedValues] = useState("");
+	async function pushData() {
+		console.log(submittedValues);
+		const type = farmer ? "farmer" : enth ? "enthusiast" : "expert";
+		const response = await axios.post(
+			`http://localhost:8000/users/${type}`,
+			JSON.parse(submittedValues)
+		);
+		console.log(response);
+
+		localStorage.setItem("id", response.data.user_id);
+		localStorage.setItem("type", type);
+		props.handleClick(!props.showsignup);
+	}
+
 	return (
 		<>
-			<div className="w-[60%]  absolute translate-x-[-50%] translate-y-[-50%] top-[50%] left-[50%] h-[80%] rounded-[18px] items-center justify-center flex-col opacity-85 bg-[rgb(101,211,172)]">
-				<div className="basis-[17%] flex flex-row items-center justify-center gap-4">
-					<button
-						className={`w-fit p-4 flex items-center justify-center h-fit ${
-							farmer ? "bg-[rgba(0,0,0,0.83)]" : "bg-[rgba(0,0,0,0.5)]"
-						} rounded-[10px]`}
-						onClick={() => {
-							handleClick("farmer");
-						}}
-					>
-						<span className="text-[20px] font-mono font-bold text-white">
-							FARMER
-						</span>
-					</button>
-					<button
-						className={`w-fit p-4 flex items-center justify-center h-fit ${
-							enth ? "bg-[rgba(0,0,0,0.83)]" : "bg-[rgba(0,0,0,0.5)]"
-						} rounded-[10px]`}
-						onClick={() => {
-							handleClick("enth");
-						}}
-					>
-						<span className="text-[20px] font-mono font-bold text-white">
-							ENTHUSIAST
-						</span>
-					</button>
-					<button
-						className={`w-fit p-4 flex items-center justify-center h-fit ${
-							expert ? "bg-[rgba(0,0,0,0.83)]" : "bg-[rgba(0,0,0,0.5)]"
-						} rounded-[10px]`}
-						onClick={() => {
-							handleClick("expert");
-						}}
-					>
-						<span className="text-[20px] font-mono font-bold text-white">
-							EXPERT
-						</span>
-					</button>
-				</div>
-				<div className="basis-[80%] flex flex-col items-center justify-start mt-[25px] gap-4">
-					<Box
-						component="form"
-						maw={600}
-						onSubmit={(event) => {
-							form.onSubmit(() => {
-								event?.preventDefault();
-							});
-						}}
-					>
-						<TextInput
-							label="Name"
-							placeholder="Name"
-							classNames={{
-								input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+			<div className="w-full h-full flex flex-col items-center justify-center backdrop-blur-[5px] bg-[rgba(0,0,0,0.3)]">
+				<div className="w-[60%] h-[83%] border-[rgba(0,0,0,0.7)] border-[1px] border-solid rounded-[22px] items-center justify-center flex flex-col bg-[rgb(60,186,131)]">
+					<div className="basis-[17%] h-full flex flex-row items-center justify-center gap-4">
+						<button
+							className={`w-fit p-4 flex items-center justify-center h-fit ${
+								farmer
+									? "bg-[rgba(0,0,0,0.83)]"
+									: "bg-[rgba(0,0,0,0.5)]"
+							} rounded-[10px]`}
+							onClick={() => {
+								handleClick("farmer");
 							}}
-							withAsterisk
-							{...form.getInputProps("name")}
-						/>
-						<TextInput
-							label="Phone Number"
-							placeholder="+91 1234567890"
-							classNames={{
-								input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+						>
+							<span className="text-[20px] font-mono font-bold text-white">
+								FARMER
+							</span>
+						</button>
+						<button
+							className={`w-fit p-4 flex items-center justify-center h-fit ${
+								enth ? "bg-[rgba(0,0,0,0.83)]" : "bg-[rgba(0,0,0,0.5)]"
+							} rounded-[10px]`}
+							onClick={() => {
+								handleClick("enth");
 							}}
-							withAsterisk
-							mt="md"
-							type="number"
-							{...form.getInputProps("job")}
-						/>
-						<TextInput
-							label="Your email"
-							placeholder="Your email"
-							classNames={{
-								input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+						>
+							<span className="text-[20px] font-mono font-bold text-white">
+								ENTHUSIAST
+							</span>
+						</button>
+						<button
+							className={`w-fit p-4 flex items-center justify-center h-fit ${
+								expert
+									? "bg-[rgba(0,0,0,0.83)]"
+									: "bg-[rgba(0,0,0,0.5)]"
+							} rounded-[10px]`}
+							onClick={() => {
+								handleClick("expert");
 							}}
-							withAsterisk
-							mt="md"
-							{...form.getInputProps("email")}
-						/>
-						{!expert && (
-							<>
-								<PasswordInput
-									placeholder="Password"
-									label="Password"
-									withAsterisk
-									className="mt-[10px]"
-									classNames={{
-										input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[5px] rounded-[6.3px]",
-									}}
-								/>
-								<Select
-									className="mt-[15px]"
-									label="State"
-									placeholder="Pick one"
-									withAsterisk
-									searchable
-									onSearchChange={onSearchChange}
-									searchValue={searchValue}
-									nothingFound="No options"
-									data={["React", "Angular", "Svelte", "Vue"]}
-									classNames={{
-										input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[4px] rounded-[6.3px]",
-									}}
-								/>
-								<MultiSelect
-									data={data}
-									label="Your preffered languages"
-									placeholder="Pick all that you like"
-									className="mt-[15px]"
-									withAsterisk
-									classNames={{
-										input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[8px] rounded-[6.3px]",
-									}}
-								/>
-							</>
-						)}
-						<Group position="center" mt="md">
-							<button className="w-fit p-4 flex items-center justify-center h-fit bg-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.8)] rounded-[10px]">
-								<span className="text-[20px] font-mono font-bold text-white">
-									SUBMIT
-								</span>
-							</button>
-						</Group>
-					</Box>
+						>
+							<span className="text-[20px] font-mono font-bold text-white">
+								EXPERT
+							</span>
+						</button>
+					</div>
+					<div className="basis-[80%] flex flex-col items-center justify-start mt-[25px] gap-4">
+						<Box
+							component="form"
+							maw={600}
+							onSubmit={(event) => {
+								event.preventDefault();
+								console.log("Form submitted");
+								console.log(form.values);
+								console.log(JSON.stringify(form.values, null, 2));
+
+								setSubmittedValues(
+									JSON.stringify(form.values, null, 2)
+								);
+								pushData();
+							}}
+						>
+							<TextInput
+								label="Name"
+								placeholder="Name"
+								classNames={{
+									input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+								}}
+								withAsterisk
+								{...form.getInputProps("name")}
+							/>
+							<TextInput
+								label="Phone Number"
+								placeholder="+91 1234567890"
+								classNames={{
+									input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+								}}
+								withAsterisk
+								mt="md"
+								type="number"
+								{...form.getInputProps("phone_number")}
+							/>
+							<TextInput
+								label="Your email"
+								placeholder="Your email"
+								classNames={{
+									input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[10px] rounded-[6.3px]",
+								}}
+								withAsterisk
+								mt="md"
+								{...form.getInputProps("email")}
+							/>
+							{
+								<>
+									<PasswordInput
+										placeholder="Password"
+										label="Password"
+										withAsterisk
+										className="mt-[10px]"
+										classNames={{
+											input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[5px] rounded-[6.3px]",
+										}}
+										{...form.getInputProps("password")}
+									/>
+									<Select
+										className="mt-[15px]"
+										label="State"
+										placeholder="Pick one"
+										withAsterisk
+										searchable
+										onSearchChange={onSearchChange}
+										searchValue={searchValue}
+										nothingFound="No options"
+										data={[
+											"Andhra Pradesh",
+											"Arunachal Pradesh",
+											"Assam",
+											"Bihar",
+											"Chhattisgarh",
+											"Goa",
+											"Gujarat",
+											"Haryana",
+											"Himachal Pradesh",
+											"Jharkhand",
+											"Karnataka",
+											"Kerala",
+											"Madhya Pradesh",
+											"Maharashtra",
+											"Manipur",
+											"Meghalaya",
+											"Mizoram",
+											"Nagaland",
+											"Odisha",
+											"Punjab",
+											"Rajasthan",
+											"Sikkim",
+											"Tamil Nadu",
+											"Telangana",
+											"Tripura",
+											"Uttarakhand",
+											"Uttar Pradesh",
+											"West Bengal",
+										]}
+										classNames={{
+											input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[4px] rounded-[6.3px]",
+										}}
+										{...form.getInputProps("region")}
+									/>
+									<Select
+										className="mt-[15px]"
+										label="language"
+										placeholder="Pick one"
+										withAsterisk
+										searchable
+										onSearchChange={onLangChange}
+										searchValue={langValue}
+										nothingFound="No options"
+										data={[
+											"Hindi",
+											"Bengali",
+											"Telugu",
+											"Marathi",
+											"Tamil",
+											"Urdu",
+											"Gujarati",
+											"Punjabi",
+											"Malayalam",
+											"Kannada",
+											"Oriya",
+											"Assamese",
+											"English",
+										]}
+										classNames={{
+											input: "w-[400px] h-[45px] font-mono box-border bg-new-white border-[0.25px] border-solid border-[rgba(255,255,255,0.403)] mt-[4px] rounded-[6.3px]",
+										}}
+										{...form.getInputProps("language")}
+									/>
+								</>
+							}
+							<Group position="center" mt="md">
+								<button className="w-fit p-4 flex items-center justify-center h-fit bg-[rgba(0,0,0,0.5)] hover:bg-[rgba(0,0,0,0.8)] rounded-[10px]">
+									<span className="text-[20px] font-mono font-bold text-white">
+										SUBMIT
+									</span>
+								</button>
+							</Group>
+						</Box>
+					</div>
 				</div>
 			</div>
 		</>
