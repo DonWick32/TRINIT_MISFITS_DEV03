@@ -2,7 +2,7 @@
 
 TRI NITT Hackathon 2023 - Team "MISFITS"
 
-Video Link : https://drive.google.com/drive/folders/1AxBWC427AhqvrkCl_g0k0RGbEnllsps_?usp=sharing
+Video & APK Link : https://drive.google.com/drive/folders/1AxBWC427AhqvrkCl_g0k0RGbEnllsps_?usp=sharing
 
 ### API Setup:
 - Clone repo and change directory to `backend`
