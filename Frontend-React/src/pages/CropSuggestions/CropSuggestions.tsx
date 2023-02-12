@@ -19,8 +19,6 @@ export const CropSuggestions = () => {
 		Location();
 	}, []);
 	return (
-		<div>
-			<h1>Crop Suggestions</h1>
-		</div>
+		<div className="basis-[90%] w-full h-full items-center justify-around flex flex-col"></div>
 	);
 };

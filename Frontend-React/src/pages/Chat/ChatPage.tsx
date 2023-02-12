@@ -62,6 +62,7 @@ export const ChatPage = () => {
 
 	return (
 		<Chat client={client} theme="messaging light">
+			{" "}
 			<Channel channel={channel}>
 				<Window>
 					<ChannelHeader />

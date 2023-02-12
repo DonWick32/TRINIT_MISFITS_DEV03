@@ -15,9 +15,33 @@ export const publicRoutes: RouteType[] = [
 
 export const privateRoutes: RouteType[] = [
 	{
-		path: "/dashboard",
+		path: "/call",
 		element: <ChatPage />,
 		title: "Dashboard",
 		description: "Dashboard Page",
+	},
+	{
+		path: "/chat",
+		element: <ChatPage />,
+		title: "Dashboard",
+		description: "Dashboard Page",
+	},
+	{
+		path: "/dashboard",
+		element: <Dashboard />,
+		title: "Dashboard",
+		description: "Dashboard Page",
+	},
+	{
+		path: "/query",
+		element: <Query />,
+		title: "Query",
+		description: "Query Page",
+	},
+	{
+		path: "/",
+		element: <Dashboard />,
+		title: "Home",
+		description: "Home",
 	},
 ];

@@ -1,41 +1,34 @@
 import React, { useState } from "react";
-import { Button } from "@mantine/core";
 import { Login } from "../../components/LoginPopup/Login";
+import { Navbar } from "../../components/NavBar/Navbar";
+import { CropSuggestions } from "../CropSuggestions/CropSuggestions";
 
 const Dashboard = () => {
 	const [showLogin, setShowLogin] = useState(false);
+	const [loogedIn, setLoggedIn] = useState(false);
 	return (
 		<>
 			<div className="h-screen relative w-screen flex flex-col items-center landing-page-bg">
-				<div className=" w-[85%] h-full basis-[10%] flex flex-row justify-between items-center">
-					<div className="basis-[15%] flex flex-row items-center justify-center">
-						<span className="text-[32px] font-mono font-extrabold not-italic tracking-wide">
-							Agriculture
-						</span>
-					</div>
-					<div className="flex flex-row gap-5 font-mono basis-[25%] items-center justify-between">
-						<Button
-							variant="light"
-							onClick={() => {
-								setShowLogin(!showLogin);
-							}}
-						>
-							<span className="text-[20px] text-black">LOGIN</span>
-						</Button>
-						<Button variant="light">
-							<span className="text-[20px] font-bold text-black">
-								CHAT
+				<Navbar />
+				{!loogedIn ? (
+					<>
+						<div className="basis-[90%] flex flex-row items-center justify-center">
+							<span className="text-[55px] animate-bounce tracking-widest leading-[50px] ">
+								Login to get your personalized feed
 							</span>
-						</Button>
-						<Button variant="light">
-							<span className="text-[20px] font-bold text-black">
-								CALL
-							</span>
-						</Button>
-					</div>
-				</div>
+						</div>
+					</>
+				) : (
+					<>
+						<CropSuggestions />
+					</>
+				)}
 			</div>
-			{showLogin && <Login />}
+			{showLogin && (
+				<div className="w-full absolute top-0 left-0 h-full">
+					<Login />
+				</div>
+			)}
 		</>
 	);
 };
