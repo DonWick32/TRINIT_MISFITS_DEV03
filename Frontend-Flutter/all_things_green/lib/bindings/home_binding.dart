@@ -1,4 +1,5 @@
 
+import 'package:all_things_green/controllers/chat_controller.dart';
 import 'package:all_things_green/controllers/dashboard_controller.dart';
 import 'package:all_things_green/controllers/home_controller.dart';
 import 'package:all_things_green/controllers/plant_controller.dart';
@@ -16,6 +17,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut(() => QueryController());
     Get.lazyPut(() => SchemesController());
     Get.lazyPut(() => TechniquesController());
-
+    Get.lazyPut(() => ChatController());
   }
 }

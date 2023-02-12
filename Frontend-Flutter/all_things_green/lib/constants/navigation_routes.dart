@@ -9,4 +9,5 @@ class NavigationRoutes {
   static String query = '/query';
   static String schemes = '/schemes';
   static String techniques = '/techniques';
+  static String video = '/video';
 }

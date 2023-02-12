@@ -141,4 +141,40 @@ Future<String> signup(Map<String, String> signupRequest, String userType, Storag
   }
 }
 
+Future<String> postQuery(String query) async {
+  try {
+    final storage = Get.find<StorageServices>();
+    final userID = storage.getUser();
+    final userType = storage.getUserType();
+    final response = await http.post(
+        Uri.parse(AppConstants.postQueryUrl + userType!.toLowerCase() + "?sender_id=" + userID!.toString() + "&query_string=" + query),
+        headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return json['message'];
+    } else {
+      return 'Query creation failed';
+    }
+  } catch (e) {
+    print(e);
+    return Future.error(e);
+  }
+}
+Future<List<Map<String, dynamic>>> getQueries() async {
+  try {
+    final response = await http.get(Uri.parse(AppConstants.getQueryUrl));
+    if (response.statusCode == 200) {
+      final jsonList = jsonDecode(response.body) as List<dynamic>;
+      final data = jsonList.map((json) => json as Map<String, dynamic>).toList();
+      return data;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print(e);
+    throw e;
+  }
+}
+
+
 }

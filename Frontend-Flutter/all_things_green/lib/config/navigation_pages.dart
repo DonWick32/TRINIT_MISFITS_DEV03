@@ -18,6 +18,7 @@ import 'package:all_things_green/views/landing.dart';
 import 'package:all_things_green/views/plant.dart';
 import 'package:all_things_green/views/schemes.dart';
 import 'package:all_things_green/views/techniques.dart';
+import 'package:all_things_green/views/video_call_screen.dart';
 import 'package:get/get.dart';
 import 'package:all_things_green/constants/navigation_routes.dart';
 
@@ -67,6 +68,7 @@ class NavigationPages {
       name: NavigationRoutes.query,
       page: () => const QueryPage(),
       binding: QueryBinding(),
+      arguments: String,
     ),
     GetPage(
       name: NavigationRoutes.schemes,
@@ -77,6 +79,10 @@ class NavigationPages {
       name: NavigationRoutes.techniques,
       page: () => const TechniquesPage(),
       binding: TechniquesBinding(),
+    ),
+    GetPage(
+      name: NavigationRoutes.video,
+      page: () => const VideoCallScreen(),
     ),
   ];
 }

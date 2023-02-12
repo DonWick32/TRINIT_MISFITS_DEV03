@@ -56,6 +56,7 @@ class LandingPage extends GetView<LandingController> {
                       ),
                     ),
                     onPressed: () {
+                      controller.setUserType('Farmer');
                       Get.toNamed(NavigationRoutes.login, arguments: 'Farmer');
                     },
                     child: const Text(
@@ -81,6 +82,7 @@ class LandingPage extends GetView<LandingController> {
                       ),
                     ),
                     onPressed: () {
+                      controller.setUserType('Enthusiast');
                       Get.toNamed(NavigationRoutes.login,
                           arguments: 'Enthusiast');
                     },
@@ -107,6 +109,7 @@ class LandingPage extends GetView<LandingController> {
                       ),
                     ),
                     onPressed: () {
+                      controller.setUserType('Expert');
                       Get.toNamed(NavigationRoutes.login, arguments: 'Expert');
                     },
                     child: const Text(
