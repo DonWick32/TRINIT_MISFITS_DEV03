@@ -5,6 +5,7 @@ import { ChatPage } from "../pages/Chat/ChatPage";
 import { Query } from "../pages/Query/Query";
 import { Schemes } from "../pages/CropSuggestions/CropSuggestions";
 import { Crops } from "../pages/Crops/Crops";
+import { Tech } from "../pages/Tech/Tech";
 
 export const publicRoutes: RouteType[] = [
 	{
@@ -55,6 +56,12 @@ export const privateRoutes: RouteType[] = [
 	{
 		path: "/crops",
 		element: <Crops />,
+		title: "Crops",
+		description: "Crops",
+	},
+	{
+		path: "/tech",
+		element: <Tech />,
 		title: "Crops",
 		description: "Crops",
 	},

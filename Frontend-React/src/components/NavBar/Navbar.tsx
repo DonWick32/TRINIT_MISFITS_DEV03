@@ -12,7 +12,7 @@ export const Navbar = () => {
 					onClick={() => {
 						navigate("/");
 					}}
-					className="text-[32px] font-mono font-extrabold not-italic tracking-wide"
+					className="text-[32px] font-mono font-extrabold not-italic cursor-pointer tracking-wide"
 				>
 					Agriculture
 				</span>
@@ -66,6 +66,16 @@ export const Navbar = () => {
 					}}
 				>
 					<span className="text-[20px] font-bold text-black">CROPS</span>
+				</Button>
+				<Button
+					variant="light"
+					onClick={() => {
+						navigate("/tech");
+					}}
+				>
+					<span className="text-[20px] font-bold text-black">
+						ADV TECH
+					</span>
 				</Button>
 			</div>
 		</div>
